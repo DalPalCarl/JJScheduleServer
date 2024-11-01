@@ -1,6 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const mysql = require('mysql');
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000
 
@@ -22,6 +23,8 @@ connection.connect((err) => {
 });
 
 app.use(express.json());
+app.use(cors({origin: true}));
+
 
 //------------USERS--------------------------------------
 
@@ -37,12 +40,15 @@ app.get('/users', (req, res) => {
 
 //------------SHIFTS-------------------------------------
 
-app.get('/shifts', (req, res) => {
-    connection.query('SELECT * FROM Shifts', (err, results) => {
+app.get('/shifts/:year/:month/:day', (req, res) => {
+    let date = "" + req.params.year + "-" + req.params.month + "-" + req.params.day;
+    console.log(date);
+    connection.query(`SELECT * FROM Shifts WHERE shiftDate = ?`, date, (err, results) => {
         if(err){
             res.status(500).send("Error fetching shifts");
             return;
         }
+        
         res.send(results);
     })
 });
