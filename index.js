@@ -43,7 +43,7 @@ app.get('/users', (req, res) => {
 app.get('/shifts/:year/:month/:day', (req, res) => {
     let date = "" + req.params.year + "-" + req.params.month + "-" + req.params.day;
     console.log(date);
-    connection.query(`SELECT * FROM Shifts WHERE shiftDate = ?`, date, (err, results) => {
+    connection.query(`SELECT * FROM Shifts INNER JOIN Users ON Shifts.employeeId = Users.id WHERE shiftDate = ?`, date, (err, results) => {
         if(err){
             res.status(500).send("Error fetching shifts");
             return;
