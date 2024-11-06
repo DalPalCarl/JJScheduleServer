@@ -38,11 +38,31 @@ app.get('/users', (req, res) => {
     })
 });
 
+app.post('/users', (req, res) => {
+    let data = [req.body.id, req.body.fname, req.body.lname];
+    connection.query('INSERT INTO Users (id, fname, lname) VALUES (?, ?, ?)', data, (err, r) => {
+        if(err){
+            res.status(500).send("Error adding user");
+            return;
+        }
+        res.send("User Added");
+    })
+});
+
+app.delete('/users/:id', (req, res) => {
+    connection.query('DELETE FROM Users WHERE id = ?', req.params.id, (err, r) => {
+        if(err){
+            res.status(500).send("Error deleting user");
+            return;
+        }
+        res.send("User Deleted");
+    })
+})
+
 //------------SHIFTS-------------------------------------
 
 app.get('/shifts/:year/:month/:day', (req, res) => {
     let date = "" + req.params.year + "-" + req.params.month + "-" + req.params.day;
-    console.log(date);
     connection.query(`SELECT * FROM Shifts INNER JOIN Users ON Shifts.employeeId = Users.id WHERE shiftDate = ?`, date, (err, results) => {
         if(err){
             res.status(500).send("Error fetching shifts");
@@ -52,6 +72,18 @@ app.get('/shifts/:year/:month/:day', (req, res) => {
         res.send(results);
     })
 });
+
+app.post("/shifts", (req, res) => {
+    let data = [req.body.employeeId, req.body.start_time, req.body.end_time, req.body.shiftDate, req.body.shiftRole,]
+    connection.query(`INSERT INTO Shifts (employeeId, start_time, end_time, shiftDate, shiftRole) VALUES (?, ?, ?, ?, ?)`, data, (err, r) => {
+            if(err){
+                res.status(500).send("Error posting shift");
+                return;
+            }
+
+            res.send("Shift posted");
+    });
+})
 
 app.listen(
     port,
