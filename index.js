@@ -39,8 +39,8 @@ app.get('/users', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-    let data = [req.body.id, req.body.fname, req.body.lname];
-    connection.query('INSERT INTO Users (id, fname, lname) VALUES (?, ?, ?)', data, (err, r) => {
+    let data = [parseInt(req.body.id), req.body.fname, req.body.lname];
+    connection.query(`INSERT INTO Users (id, fname, lname) VALUES (?, ?, ?)`, data, (err, r) => {
         if(err){
             res.status(500).send("Error adding user");
             return;
