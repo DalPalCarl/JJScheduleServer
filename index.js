@@ -50,7 +50,7 @@ app.post('/users', (req, res) => {
 });
 
 app.delete('/users/:id', (req, res) => {
-    connection.query('DELETE FROM Users WHERE id = ?', req.params.id, (err, r) => {
+    connection.query(`DELETE FROM Users`, (err, r) => {
         if(err){
             res.status(500).send("Error deleting user");
             return;
@@ -83,6 +83,16 @@ app.post("/shifts", (req, res) => {
 
             res.send("Shift posted");
     });
+})
+
+app.delete("/shifts/:id", (req, res) => {
+    connection.query(`DELETE FROM Shifts WHERE shiftId = ${req.params.id}`, (err, r) => {
+        if(err){
+            res.status(500).send("Error deleting shift");
+            return;
+        }
+        res.send("Shift deleted");
+    })
 })
 
 app.listen(
