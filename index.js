@@ -50,7 +50,7 @@ app.post('/users', (req, res) => {
 });
 
 app.delete('/users/:id', (req, res) => {
-    connection.query(`DELETE FROM Users`, (err, r) => {
+    connection.query(`DELETE FROM Users WHERE id = ${req.params.id}`, (err, r) => {
         if(err){
             res.status(500).send("Error deleting user");
             return;
